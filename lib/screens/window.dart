@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -39,44 +38,36 @@ class WindowBarcodeScanner extends StatelessWidget {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(appBarTitle ?? kScanPageTitle),
-        centerTitle: centerTitle,
-        leading: IconButton(
-          onPressed: () {
-            /// send close event to web-view
-            controller.postWebMessage(json.encode({"event": "close"}));
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back_ios),
-        ),
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: FutureBuilder<bool>(
+            future: initPlatformState(
+              controller: controller,
+            ),
+            builder: (context, snapshot) {
+              if (snapshot.hasData && snapshot.data != null) {
+                return Webview(
+                  controller,
+                  permissionRequested: (url, permissionKind, isUserInitiated) =>
+                      _onPermissionRequested(
+                    url: url,
+                    kind: permissionKind,
+                    isUserInitiated: isUserInitiated,
+                    context: context,
+                    isPermissionGranted: isPermissionGranted,
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text(snapshot.error.toString()),
+                );
+              }
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }),
       ),
-      body: FutureBuilder<bool>(
-          future: initPlatformState(
-            controller: controller,
-          ),
-          builder: (context, snapshot) {
-            if (snapshot.hasData && snapshot.data != null) {
-              return Webview(
-                controller,
-                permissionRequested: (url, permissionKind, isUserInitiated) =>
-                    _onPermissionRequested(
-                  url: url,
-                  kind: permissionKind,
-                  isUserInitiated: isUserInitiated,
-                  context: context,
-                  isPermissionGranted: isPermissionGranted,
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text(snapshot.error.toString()),
-              );
-            }
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }),
     );
   }
 
