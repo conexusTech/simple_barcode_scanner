@@ -38,7 +38,7 @@ class BarcodeScanner extends StatelessWidget {
       ..onLoad.listen((event) async {
         /// Barcode listener on success barcode scanned
         html.window.onMessage.listen((event) {
-          /// If barcode is null then assign scanned barcode
+          /// If barcode is null then assign scanned barcodex
           /// and close the screen otherwise keep scanning
           if (barcodeNumber == null) {
             barcodeNumber = event.data;
