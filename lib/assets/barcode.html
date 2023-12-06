@@ -17,17 +17,6 @@
         height: 100vh; /* IMPORTANT!!! Stretches viewport to 100% */
         margin: 0px;
       }
-
-      #reader {
-        height: 100vh;
-        width: 100vw;
-      }
-
-      #reader video {
-        width: 100vw !important;
-        height: 100vh !important;
-        object-fit: cover;
-      }
     </style>
     <script src="html5-qrcode.min.js"></script>
   </head>
@@ -36,9 +25,13 @@
     <div id="reader"></div>
     <script>
       //refer doc here https://github.com/mebjas/html5-qrcode
+
       const html5QrCode = new Html5Qrcode('reader');
+
       console.log('Starting SCANNING CODE');
       const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+        console.log(decodedText);
+        console.log(decodedResult);
         html5QrCode.stop();
         /* handle success for web */
         window.parent.postMessage(decodedText, '*');
@@ -53,8 +46,8 @@
         }
       };
       const config = {
-        fps: 10,
-        qrbox: 200,
+        fps: 24,
+        qrbox: { width: 250, height: 250 },
       };
 
       // If you want to prefer back camera
