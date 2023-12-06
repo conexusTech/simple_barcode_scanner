@@ -129,6 +129,8 @@ class WindowBarcodeScanner extends StatelessWidget {
       await controller.initialize();
       await controller
           .loadUrl(getAssetFileUrl(asset: PackageConstant.barcodeFilePath));
+      await controller
+          .loadUrl(getAssetFileUrl(asset: PackageConstant.priceTagFilePath));
 
       /// Listen to web to receive barcode
       controller.webMessage.listen((event) {
